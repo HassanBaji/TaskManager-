@@ -7,9 +7,15 @@ interface Props {
   todo: Todo;
   todos: Todo[];
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
+const SingleTodo: React.FC<Props> = ({
+  todo,
+  todos,
+  setTodos,
+  setUnsavedChanges,
+}) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -20,11 +26,13 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
         todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
       )
     );
+    setUnsavedChanges(true);
   };
 
   const handleDelete = (id: number) => {
     console.log(id);
     setTodos(todos.filter((todo) => todo.id !== id));
+    setUnsavedChanges(true);
   };
 
   const handleEdit = (ev: React.FormEvent, id: number) => {
@@ -33,6 +41,7 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
       todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
     );
     setEdit(false);
+    setUnsavedChanges(true);
   };
 
   useEffect(() => {
