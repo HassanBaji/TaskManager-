@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
     salt: { type: String, select: false },
     sessionToken: { type: String, select: false },
   },
+  projects: [{ projectsId: { type: String } }],
 });
 
 export const UserModel = mongoose.model("user", UserSchema);
