@@ -1,4 +1,3 @@
-import { getUserById } from "db/users";
 import {
   getMyProjectById,
   createProject,
@@ -6,7 +5,7 @@ import {
   updateProjectById,
   getProjects,
 } from "../db/projects";
-import express, { response } from "express";
+import express from "express";
 
 export const getAllProjects = async (
   req: express.Request,
@@ -79,12 +78,14 @@ export const updateUsers = async (
     const { users } = req.body;
 
     if (!id || !users) {
+      console.log("heres");
       return res.sendStatus(400);
     }
 
     const myProject = await getMyProjectById(id);
 
     if (!myProject) {
+      console.log("here");
       return res.sendStatus(400);
     }
 
@@ -170,7 +171,7 @@ export const updateProject = async (
       desc: desc,
     });
 
-    return res.status(200).json(updatedProject);
+    return res.status(200).json(updatedProject).end();
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);

@@ -8,10 +8,12 @@ import {
 import Cookies from "js-cookie";
 
 interface StateContextProps {
-  user: string | null;
+  user: { username: string; _id: string; email: string } | null;
   token: string | null;
   notification: string | null;
-  setUser: (user: string | null) => void;
+  setUser: (
+    user: { username: string; _id: string; email: string } | null
+  ) => void;
   setToken: (token: string | null) => void;
   setNotification: (message: string | null) => void;
 }
@@ -32,7 +34,11 @@ interface ContextProviderProps {
 export const ContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<{
+    username: string;
+    _id: string;
+    email: string;
+  } | null>(null);
   const [notification, _setNotification] = useState<string | null>("");
   const [token, _setToken] = useState<string | null>(
     Cookies.get("AUTH-TOKEN") || null

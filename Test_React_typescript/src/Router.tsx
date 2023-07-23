@@ -2,7 +2,9 @@ import { Navigate, createBrowserRouter, RouteObject } from "react-router-dom";
 import { ReactElement } from "react";
 import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
-import { TasksView } from "./views/TasksView";
+import UserDefaultLayout from "./Components/userDefaultLayout";
+import { HomeView } from "./views/HomeView";
+import { ProjectsView } from "./views/ProjectsView";
 
 const routes: RouteObject[] = [
   {
@@ -15,8 +17,23 @@ const routes: RouteObject[] = [
   },
   {
     path: "/",
-    element: <TasksView />,
+    element: <UserDefaultLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="/home" />,
+      },
+      {
+        path: "/home",
+        element: <HomeView />,
+      },
+      {
+        path: "/projects",
+        element: <ProjectsView />,
+      },
+    ],
   },
+
   // Add your existing routes here
 ];
 

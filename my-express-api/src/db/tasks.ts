@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 
 const TasksSchema = new mongoose.Schema({
-  projetcId: { type: String, required: true },
+  projectId: { type: String, required: true },
   title: { type: String, required: true },
   desc: { type: String, required: true },
   status: { type: String, required: true },
-  user: { type: String, required: true },
+  user: {
+    userId: { type: String, required: true },
+    userName: { type: String, required: true },
+  },
 });
 
 export const TasksModel = mongoose.model("task", TasksSchema);

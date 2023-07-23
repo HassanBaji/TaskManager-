@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser, getUserByEmail } from "../db/users";
+import { createUser, getUserByEmail, getUserById } from "../db/users";
 import { random } from "../helpers";
 import { authentication } from "../helpers";
 
@@ -70,6 +70,39 @@ export const register = async (req: express.Request, res: express.Response) => {
     });
 
     return res.status(200).json(user).end();
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};
+
+export const logout = async (req: express.Request, res: express.Response) => {
+  try {
+    // Assuming you have access to the user object in the request
+    const { id } = req.params;
+    if (!id) {
+      return res.sendStatus(400);
+    }
+
+    // Clear the session token
+    const myUser = await getUserById(id);
+    if (!myUser) {
+      return res.sendStatus(404);
+    }
+
+    myUser.authentication.sessionToken = null;
+
+    // Save the user to the database
+    await myUser.save();
+
+    // Clear the AUTH-TOKEN cookie
+    res.clearCookie("AUTH-TOKEN", {
+      domain: "localhost",
+      path: "/",
+    });
+
+    // Send a success response
+    return res.sendStatus(200);
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
