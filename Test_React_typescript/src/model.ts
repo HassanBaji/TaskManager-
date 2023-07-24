@@ -9,8 +9,8 @@ export interface Project {
   name: string;
   desc: string;
   owner: string;
-  users?: [{ userName: string; userId: string }];
-  tasks?: [{ taskId: string }];
+  users?: { userName: string; userId: string }[];
+  tasks?: { taskId: string }[];
 }
 
 export interface Tasks {

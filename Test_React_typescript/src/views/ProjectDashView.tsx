@@ -4,6 +4,8 @@ import { Project } from "../model";
 import axiosClient from "../axios-client";
 import { useStateContext } from "../ContextProvider";
 import { Link, useNavigate } from "react-router-dom";
+import { TasksCard } from "../Components/TasksCard";
+import { UsersCard } from "../Components/UsersCard";
 
 interface StateContextProps {
   // ... other properties ...
@@ -35,10 +37,13 @@ export const ProjectDashView = () => {
 
   useEffect(() => {
     getMyProject();
+  }, []);
+
+  useEffect(() => {
     if (myProject?.owner == user?._id) {
       setIsOwner(true);
     }
-  }, [isOwner]);
+  }, [myProject]);
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this project?")) {
@@ -67,13 +72,6 @@ export const ProjectDashView = () => {
     }
   };
 
-  const goToTasks = () => {
-    navigate(`/tasks/${id}`);
-  };
-
-  const goToUsers = () => {
-    navigate(`/users/${id}`);
-  };
   return (
     <div>
       <div
@@ -100,30 +98,16 @@ export const ProjectDashView = () => {
       {!loading && (
         <div className="card">
           <div className="row">
-            <div className="col-md-6 mb-4">
-              <div
-                className="card border-success"
-                style={{ cursor: "pointer" }}
-                onClick={() => goToTasks()}
-              >
-                <div className="card-body">
-                  <h5 className="card-title">Tasks</h5>
-                  <p className="card-text">{myProject?.tasks?.length}</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mb-4">
-              <div
-                className="card border-success"
-                style={{ cursor: "pointer" }}
-                onClick={() => goToUsers()}
-              >
-                <div className="card-body">
-                  <h5 className="card-title">Users</h5>
-                  <p className="card-text">{myProject?.users?.length}</p>
-                </div>
-              </div>
-            </div>
+            <TasksCard
+              myProject={myProject}
+              tasks={myProject?.tasks}
+              _id={myProject?._id}
+            />
+            <UsersCard
+              myProject={myProject}
+              users={myProject?.users}
+              _id={myProject?._id}
+            />
           </div>
         </div>
       )}

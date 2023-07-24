@@ -31,6 +31,8 @@ export const ProjectsFormView: React.FC = () => {
   useEffect(() => {
     if (id) {
       getMyProject();
+    } else {
+      setIsLoading(false);
     }
 
     setMyProject({ ...myProject, owner: user?._id });
