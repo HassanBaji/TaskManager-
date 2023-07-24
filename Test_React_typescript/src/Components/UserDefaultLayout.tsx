@@ -4,9 +4,10 @@ import axiosClient from "../axios-client";
 import { useStateContext } from "../ContextProvider";
 import { useEffect } from "react";
 import "../index.css";
+import { Project } from "../model";
 
 const UserDefaultLayout: React.FC = () => {
-  const { user, token, setUser, setToken } = useStateContext();
+  const { user, token, setUser, setToken, setProjectsIds } = useStateContext();
   const navigate = useNavigate();
 
   if (!token) {
@@ -20,7 +21,9 @@ const UserDefaultLayout: React.FC = () => {
         try {
           const response = await axiosClient.get(`/users/${token}`);
           setUser(response.data);
+          setProjectsIds(response.data.projects);
           console.log(response.data);
+          console.log(response.data.projects);
         } catch (error) {
           console.error("Error fetching data:", error);
         }

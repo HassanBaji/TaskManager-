@@ -80,3 +80,33 @@ export const updateUser = async (
     return res.sendStatus(400);
   }
 };
+
+export const addProjectToUser = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const { id } = req.params;
+    const { projects } = req.body;
+
+    if (!id || !projects) {
+      return res.sendStatus(400);
+    }
+
+    const myUser = await getUserById(id);
+
+    if (!myUser) {
+      return res.sendStatus(404);
+    }
+
+    myUser.projects = projects.map((proj: { projectId: string }) => ({
+      projectId: proj.projectId,
+    }));
+    await myUser.save();
+
+    return res.status(200).json(myUser).end;
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};

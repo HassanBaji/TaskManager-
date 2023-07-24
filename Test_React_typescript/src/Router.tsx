@@ -5,6 +5,7 @@ import LoginView from "./views/LoginView";
 import UserDefaultLayout from "./Components/userDefaultLayout";
 import { HomeView } from "./views/HomeView";
 import { ProjectsView } from "./views/ProjectsView";
+import { ProjectsFormView } from "./views/ProjectsFormView";
 
 const routes: RouteObject[] = [
   {
@@ -30,6 +31,10 @@ const routes: RouteObject[] = [
       {
         path: "/projects",
         element: <ProjectsView />,
+      },
+      {
+        path: "/projects/new",
+        element: <ProjectsFormView />,
       },
     ],
   },

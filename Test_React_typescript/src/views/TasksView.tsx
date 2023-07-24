@@ -6,7 +6,7 @@ import { InputFeild } from "../Components/InputFeild";
 import { Todo } from "../model";
 import { TodoList } from "../Components/TodoList";
 import { useNavigate } from "react-router-dom";
-import { Navbar } from "../Components/navbar";
+
 import { useStateContext } from "../ContextProvider";
 export const TasksView: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
@@ -89,8 +89,6 @@ export const TasksView: React.FC = () => {
 
   return (
     <div>
-      <Navbar />
-
       <div className="App">
         <span className="heading"></span>
         <InputFeild todo={todo} setTodo={setTodo} handelAdd={handelAdd} />

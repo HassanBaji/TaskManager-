@@ -6,25 +6,30 @@ import {
   useEffect,
 } from "react";
 import Cookies from "js-cookie";
+import { Project } from "./model";
 
 interface StateContextProps {
   user: { username: string; _id: string; email: string } | null;
   token: string | null;
   notification: string | null;
+  projectsIds: [{ projectId: string }] | null;
   setUser: (
     user: { username: string; _id: string; email: string } | null
   ) => void;
   setToken: (token: string | null) => void;
   setNotification: (message: string | null) => void;
+  setProjectsIds: (projectsIds: [{ projectId: string }] | null) => void;
 }
 
 const StateContext = createContext<StateContextProps>({
   user: null,
   token: null,
   notification: null,
+  projectsIds: null,
   setUser: () => {},
   setToken: () => {},
   setNotification: () => {},
+  setProjectsIds: () => {},
 });
 
 interface ContextProviderProps {
@@ -43,6 +48,9 @@ export const ContextProvider: React.FC<ContextProviderProps> = ({
   const [token, _setToken] = useState<string | null>(
     Cookies.get("AUTH-TOKEN") || null
   );
+  const [projectsIds, setProjectsIds] = useState<
+    [{ projectId: string }] | null
+  >(null);
 
   const setToken = (token: string | null) => {
     _setToken(token);
@@ -73,9 +81,11 @@ export const ContextProvider: React.FC<ContextProviderProps> = ({
         user,
         notification,
         token,
+        projectsIds,
         setUser,
         setToken,
         setNotification,
+        setProjectsIds,
       }}
     >
       {children}

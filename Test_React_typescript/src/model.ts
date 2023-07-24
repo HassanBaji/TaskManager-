@@ -5,7 +5,7 @@ export interface Todo {
 }
 
 export interface Project {
-  id: string;
+  _id?: string;
   name: string;
   desc: string;
   owner: string;
@@ -14,7 +14,7 @@ export interface Project {
 }
 
 export interface Tasks {
-  id: string;
+  _id: string;
   projectId: string;
   title: string;
   desc: string;
