@@ -21,7 +21,12 @@ const UserDefaultLayout: React.FC = () => {
         try {
           const response = await axiosClient.get(`/users/${token}`);
           setUser(response.data);
-          setProjectsIds(response.data.projects);
+          setProjectsIds(
+            response.data.projects.map((projects: any) => ({
+              projectId: projects.projectId,
+            }))
+          );
+          //setProjectsIds(response.data.projects);
           console.log(response.data);
           console.log(response.data.projects);
         } catch (error) {

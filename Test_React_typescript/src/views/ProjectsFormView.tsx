@@ -1,49 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Project } from "../model";
 import "../index.css";
 import { useStateContext } from "../ContextProvider";
 import axiosClient from "../axios-client";
+import { useNavigate } from "react-router-dom";
 
 export const ProjectsFormView: React.FC = () => {
   const [myProject, setMyProject] = useState<Project | any>();
   const [loading, setIsLoading] = useState<Boolean>();
   const [errors, setErrors] = useState<string | any>();
-  const [projects, setProjects] = useState<
-    [users: { projectId: string }] | any
-  >();
+  const navigate = useNavigate();
   const { user, setNotification, setProjectsIds, projectsIds } =
     useStateContext();
-
+  useEffect(() => {
+    setMyProject({ ...myProject, owner: user?._id });
+  }, []);
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
-    setMyProject({ ...myProject, owner: user?._id });
+
     try {
       const response = await axiosClient.post("/projects", myProject);
       if (response.status == 200) {
-        const newProjectIdObj: { projectId: string } = {
-          projectId: response.data._id, // Assuming response.data._id is always a string
-        };
-        console.log(projectsIds);
-        console.log(newProjectIdObj);
-        setProjects(
-          projectsIds?.map((proj: { projectId: string }) => ({
-            users: {
-              projectId: proj.projectId,
-            },
-          }))
-        );
+        const newProjectId = response.data._id; // Assuming the server returns the new projectId in the response
+        console.log(newProjectId);
+        // Add the new projectId to the projectsIds state
+        if (projectsIds) {
+          const updatedProjectsIds = [
+            ...projectsIds,
+            { projectId: newProjectId },
+          ];
+          setProjectsIds(updatedProjectsIds);
 
-        setProjects({
-          ...projects,
-          users: { projectId: newProjectIdObj.projectId },
-        });
-
-        const addProject = await axiosClient.patch(
-          `/users-projects/${user?._id}`,
-          projects
-        );
-        if (addProject.status == 200) {
-          setNotification("succefully added new project");
+          const addProject = await axiosClient.patch(
+            `/users-projects/${user?._id}`,
+            { projects: updatedProjectsIds }
+          );
+          if (addProject.status == 200) {
+            setNotification("succefully added new project");
+            navigate("/projects");
+          }
         }
       } else {
         setNotification("facing issues please try again later");
@@ -80,7 +75,7 @@ export const ProjectsFormView: React.FC = () => {
               placeholder="Description"
             />
 
-            <button className="btn">Save</button>
+            <button className="btn btn-primary">Save</button>
           </form>
         )}
       </div>

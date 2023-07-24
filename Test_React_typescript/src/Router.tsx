@@ -2,10 +2,11 @@ import { Navigate, createBrowserRouter, RouteObject } from "react-router-dom";
 import { ReactElement } from "react";
 import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
-import UserDefaultLayout from "./Components/userDefaultLayout";
+import UserDefaultLayout from "./Components/UserDefaultLayout";
 import { HomeView } from "./views/HomeView";
 import { ProjectsView } from "./views/ProjectsView";
 import { ProjectsFormView } from "./views/ProjectsFormView";
+import { ProjectDashView } from "./views/ProjectDashView";
 
 const routes: RouteObject[] = [
   {
@@ -35,6 +36,10 @@ const routes: RouteObject[] = [
       {
         path: "/projects/new",
         element: <ProjectsFormView />,
+      },
+      {
+        path: "/projects/dash/:id",
+        element: <ProjectDashView />,
       },
     ],
   },

@@ -6,11 +6,12 @@ import { useEffect } from "react";
 import axiosClient from "../axios-client";
 import { Link } from "react-router-dom";
 import { getProjects } from "../../../my-express-api/src/db/projects";
+import "../index.css";
 
 export const ProjectsView = () => {
   const { user, projectsIds } = useStateContext();
   const [myProjects, setMyProjects] = useState<Project[]>();
-
+  const [loading, setLoading] = useState<boolean>(true);
   // const getProjects = async () => {
   const projectsArray: any = projectsIds?.map(
     (project: { projectId: string }) => {
@@ -65,9 +66,11 @@ export const ProjectsView = () => {
       </div>
       <div>
         <div>
-          {myProjects && <ProjectsList myProjects={myProjects} />}
-
-          {!myProjects && <div>No projects found</div>}
+          {myProjects && (
+            <ProjectsList myProjects={myProjects} setLoading={setLoading} />
+          )}
+          {loading && <div>loading...</div>}
+          {!myProjects && !loading && <div>No projects found</div>}
         </div>
       </div>
     </div>

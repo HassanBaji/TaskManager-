@@ -12,13 +12,13 @@ interface StateContextProps {
   user: { username: string; _id: string; email: string } | null;
   token: string | null;
   notification: string | null;
-  projectsIds: [{ projectId: string }] | null;
+  projectsIds: { projectId: string }[] | null;
   setUser: (
     user: { username: string; _id: string; email: string } | null
   ) => void;
   setToken: (token: string | null) => void;
   setNotification: (message: string | null) => void;
-  setProjectsIds: (projectsIds: [{ projectId: string }] | null) => void;
+  setProjectsIds: (projectsIds: { projectId: string }[] | null) => void;
 }
 
 const StateContext = createContext<StateContextProps>({
@@ -49,7 +49,7 @@ export const ContextProvider: React.FC<ContextProviderProps> = ({
     Cookies.get("AUTH-TOKEN") || null
   );
   const [projectsIds, setProjectsIds] = useState<
-    [{ projectId: string }] | null
+    { projectId: string }[] | null
   >(null);
 
   const setToken = (token: string | null) => {
