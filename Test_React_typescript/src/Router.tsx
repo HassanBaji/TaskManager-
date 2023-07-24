@@ -7,6 +7,8 @@ import { HomeView } from "./views/HomeView";
 import { ProjectsView } from "./views/ProjectsView";
 import { ProjectsFormView } from "./views/ProjectsFormView";
 import { ProjectDashView } from "./views/ProjectDashView";
+import { TaskView } from "./views/TaskView";
+import { UsersView } from "./views/UsersView";
 
 const routes: RouteObject[] = [
   {
@@ -40,6 +42,18 @@ const routes: RouteObject[] = [
       {
         path: "/projects/dash/:id",
         element: <ProjectDashView />,
+      },
+      {
+        path: "/projects/edit/:id",
+        element: <ProjectsFormView />,
+      },
+      {
+        path: "/tasks/:id",
+        element: <TaskView />,
+      },
+      {
+        path: "/users/:id",
+        element: <UsersView />,
       },
     ],
   },

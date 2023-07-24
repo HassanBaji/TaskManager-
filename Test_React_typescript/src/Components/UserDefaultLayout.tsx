@@ -7,7 +7,8 @@ import "../index.css";
 import { Project } from "../model";
 
 const UserDefaultLayout: React.FC = () => {
-  const { user, token, setUser, setToken, setProjectsIds } = useStateContext();
+  const { user, token, setUser, setToken, setProjectsIds, notification } =
+    useStateContext();
   const navigate = useNavigate();
 
   if (!token) {
@@ -69,7 +70,7 @@ const UserDefaultLayout: React.FC = () => {
             <Outlet />
           </main>
         </div>
-        {/* {notification && <div className="notification">{notification}</div>} */}
+        {notification && <div className="notification">{notification}</div>}
       </div>
     </div>
   );

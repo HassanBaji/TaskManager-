@@ -16,6 +16,7 @@ export const ProjectsList: React.FC<Props> = ({ myProjects, setLoading }) => {
 
   const sortProjects = () => {
     const myProjectsCopy = [...myProjects];
+    console.log(myProjects);
     const myProjectsFilter = myProjectsCopy.filter(
       (project) => project.owner === user?._id
     );
