@@ -94,7 +94,7 @@ export const ProjectDashView = () => {
           </div>
         )}
       </div>
-      {loading && <div className="text-center">Loading</div>}
+
       {!loading && (
         <div className="card">
           <div className="row">

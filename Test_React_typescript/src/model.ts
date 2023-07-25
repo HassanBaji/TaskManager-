@@ -14,7 +14,7 @@ export interface Project {
 }
 
 export interface Tasks {
-  _id: string;
+  _id?: string;
   projectId: string;
   title: string;
   desc: string;

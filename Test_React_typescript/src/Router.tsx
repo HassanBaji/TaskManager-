@@ -9,6 +9,7 @@ import { ProjectsFormView } from "./views/ProjectsFormView";
 import { ProjectDashView } from "./views/ProjectDashView";
 import { TaskView } from "./views/TaskView";
 import { UsersView } from "./views/UsersView";
+import TasksFormView from "./views/TasksFormView";
 
 const routes: RouteObject[] = [
   {
