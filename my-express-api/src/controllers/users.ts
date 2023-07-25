@@ -20,6 +20,23 @@ export const getAllUsers = async (
   }
 };
 
+export const getUserFromId = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.sendStatus(400);
+    }
+    const user = await getUserById(id);
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};
+
 export const getUserFromSessionToken = async (
   req: express.Request,
   res: express.Response

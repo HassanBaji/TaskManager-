@@ -9,12 +9,17 @@ import TasksFormView from "./TasksFormView";
 export const TaskView = () => {
   const { id } = useParams();
   const [myTasks, setMyTasks] = useState<Tasks[]>([]);
+  const [myTask, setMyTask] = useState<Tasks>();
   const [myProject, setMyProject] = useState<Project>();
   const [loading, setLoading] = useState<boolean>(true);
   const [tasksIds, setTasksIds] = useState<string[]>([]);
-  const { setNotification } = useStateContext();
+  const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [usersIds, setUsersIds] = useState<string[]>([]);
+  const { setNotification, user } = useStateContext();
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModalAdd, setShowModalAdd] = useState<boolean>(false);
+  const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
+  const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
   const [changes, setChanges] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,6 +28,9 @@ export const TaskView = () => {
 
   useEffect(() => {
     getTasks();
+    if (myProject?.owner == user?._id) {
+      setIsOwner(true);
+    }
   }, [myProject]);
 
   const getTasks = async () => {
@@ -50,7 +58,11 @@ export const TaskView = () => {
         setTasksIds(
           myProjectRes.data.tasks.map((task: { taskId: string }) => task.taskId)
         );
+        setUsersIds(
+          myProjectRes.data.users.map((user: { userId: string }) => user.userId)
+        );
         console.log(myProjectRes.data.tasks);
+        console.log(myProjectRes.data.users);
       } else {
         setNotification("something went wrong");
       }
@@ -59,8 +71,54 @@ export const TaskView = () => {
     }
   };
 
-  const toggleModal = () => {
-    setShowModal((prevState) => !prevState);
+  const toggleModalAdd = () => {
+    setShowModalAdd((prevState) => !prevState);
+  };
+  const toggleModalEdit = () => {
+    setShowModalEdit((prevState) => !prevState);
+  };
+  const toggleModalUpdate = () => {
+    setShowModalUpdate((prevState) => !prevState);
+  };
+
+  const handleDelete = async (taskId: any) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+
+    setLoading(true);
+    console.log(myTasks);
+    const newTasksRemoved = myTasks.filter((task) => task._id != taskId);
+
+    setMyTasks(newTasksRemoved);
+    const tasksObj = newTasksRemoved.map((task) => ({
+      taskId: task._id,
+    }));
+    console.log(tasksObj);
+
+    const updateProjectTaskRes = await axiosClient
+      .patch(`/projects-tasks/${id}`, { tasks: tasksObj })
+      .then((data) => {
+        setNotification("task deleted succefully");
+        setLoading(false);
+        setChanges(!changes);
+      });
+  };
+
+  const handleUpdate = (taskId: any) => {
+    const myTask = myTasks.find((task) => task._id == taskId);
+    setMyTask(myTask);
+    if (myTask) {
+      toggleModalUpdate();
+    }
+  };
+
+  const handleEdit = (taskId: any) => {
+    const myTask = myTasks.find((task) => task._id == taskId);
+    setMyTask(myTask);
+    if (myTask) {
+      toggleModalEdit();
+    }
   };
 
   return (
@@ -84,9 +142,11 @@ export const TaskView = () => {
                 Back
               </Link>
               &nbsp;
-              <button onClick={toggleModal} className="btn btn-success">
-                create new
-              </button>
+              {isOwner && (
+                <button onClick={toggleModalAdd} className="btn btn-success">
+                  create new
+                </button>
+              )}
             </div>
           </>
         )}
@@ -98,7 +158,7 @@ export const TaskView = () => {
           {!loading && myTasks && (
             <div className="row">
               {myTasks?.map((task) => (
-                <div className="col-md-4 mb-4" key={task._id}>
+                <div className="col-md-4 mb-6" key={task._id}>
                   <div
                     className={`card ${
                       task.status === "ongoing"
@@ -106,13 +166,35 @@ export const TaskView = () => {
                         : task.status === "completed"
                         ? "border-success"
                         : "border-danger"
-                    }`}
+                    } border-3`}
                     style={{ cursor: "pointer" }}
                   >
-                    <div className="card-body">
-                      <h5 className="card-title fs-4">{task.title}</h5>
-                      <p className="card-text fs-6">{task.desc}</p>
-                      <p className="card-text fs-7">{task.user.userName}</p>
+                    <div className="card-body ">
+                      <h5 className="card-title fs-5">{task.title}</h5>
+                      <p className="card-text fs-4">{task.desc}</p>
+                      <p className="card-text fw-bold fs-7">
+                        {task.user.userName}
+                      </p>
+                      <div className="container text-center">
+                        <button
+                          className="btn btn-primary m-2"
+                          onClick={() => handleUpdate(task._id)}
+                        >
+                          Update Status
+                        </button>
+                        <button
+                          className="btn btn-warning m-2"
+                          onClick={() => handleEdit(task._id)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(task._id)}
+                          className="btn btn-danger m-2"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -124,12 +206,37 @@ export const TaskView = () => {
         {!myTasks && !loading && <div>No Tasks Found</div>}
       </div>
       <TasksFormView
-        show={showModal}
-        onClose={toggleModal}
+        update={"add"}
+        show={showModalAdd}
+        onClose={toggleModalAdd}
         myProject={myProject}
         setMyProject={setMyProject}
         setChanges={setChanges}
         changes={changes}
+        usersIds={usersIds}
+      />
+      <TasksFormView
+        update={"edit"}
+        show={showModalEdit}
+        onClose={toggleModalEdit}
+        myProject={myProject}
+        setMyProject={setMyProject}
+        setChanges={setChanges}
+        changes={changes}
+        usersIds={usersIds}
+        myTasky={myTask}
+      />
+      <TasksFormView
+        myTasky={myTask}
+        update={"update"}
+        show={showModalUpdate}
+        onClose={toggleModalUpdate}
+        myProject={myProject}
+        setMyProject={setMyProject}
+        setChanges={setChanges}
+        changes={changes}
+        usersIds={usersIds}
+        setMyTasky={setMyTask}
       />
     </div>
   );

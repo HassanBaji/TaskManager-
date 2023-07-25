@@ -21,3 +21,10 @@ export interface Tasks {
   status: string;
   user: { userId: string; userName: string };
 }
+
+export interface User {
+  _id?: string;
+  username: string;
+  email: string;
+  projects?: { projectId: string | any }[];
+}
