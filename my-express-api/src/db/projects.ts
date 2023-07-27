@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+export interface IProject extends mongoose.Document {
+  owner: string;
+  name: string;
+  desc: string;
+  users?: [{ userName: string; userId: string }];
+  tasks?: [{ taskId: string }];
+}
+
 const ProjectsSchema = new mongoose.Schema({
   owner: { type: String, required: true },
   name: { type: String, required: true },
@@ -13,13 +21,4 @@ const ProjectsSchema = new mongoose.Schema({
   tasks: [{ taskId: { type: String } }],
 });
 
-export const ProjectModel = mongoose.model("project", ProjectsSchema);
-
-export const getProjects = () => ProjectModel.find();
-export const getMyProjectById = (id: string) => ProjectModel.findById(id);
-export const createProject = (values: Record<string, any>) =>
-  new ProjectModel(values).save();
-export const deleteProjectById = (id: string) =>
-  ProjectModel.findByIdAndDelete(id);
-export const updateProjectById = (id: string, values: Record<string, any>) =>
-  ProjectModel.findByIdAndUpdate(id, values);
+export const ProjectModel = mongoose.model<IProject>("project", ProjectsSchema);
