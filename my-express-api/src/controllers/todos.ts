@@ -4,7 +4,7 @@ import {
   updateTodosById,
   deleteTodosById,
   createNewTodos,
-} from "../db/todos";
+} from "../tld/db/todos";
 
 export const getMyTodos = async (
   req: express.Request,

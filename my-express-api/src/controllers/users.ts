@@ -5,7 +5,7 @@ import {
   getUserById,
   updateUserById,
   getUserBySessionToken,
-} from "../db/users";
+} from "../tld/db/users";
 
 export const getAllUsers = async (
   req: express.Request,

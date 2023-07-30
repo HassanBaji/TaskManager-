@@ -1,8 +1,10 @@
 import express from "express";
 import { get, merge } from "lodash";
-import { getUserBySessionToken } from "../db/users";
-import { getMyProjectById } from "../db/projects";
-import { getMyTaskById } from "../db/tasks";
+import { getUserBySessionToken } from "../tld/db/users";
+import { ProjectsServices } from "../services/projects";
+import { getMyTaskById } from "../tld/db/tasks";
+
+const projectsServices: ProjectsServices = new ProjectsServices();
 
 export const isOwner = async (
   req: express.Request,
@@ -104,9 +106,10 @@ export const isOwnerProject = async (
       return res.sendStatus(400);
     }
 
-    const myProject = await getMyProjectById(id);
+    const myProject = await projectsServices.getProjectById(id);
     const ownerId = myProject.owner;
-
+    console.log(ownerId);
+    console.log(currentUserId);
     if (currentUserId != ownerId) {
       return res.sendStatus(401);
     }
@@ -136,7 +139,7 @@ export const isPartOfProject = async (
       return res.sendStatus(400);
     }
 
-    const myProject = await getMyProjectById(prodId);
+    const myProject = await projectsServices.getProjectById(prodId);
     const users = myProject.users;
 
     const userInProject = users.some((user) => user.userId == currentUserId);
@@ -171,7 +174,7 @@ export const isPartOfProjectFromTask = async (
     }
 
     const myTask = await getMyTaskById(id);
-    const myProject = await getMyProjectById(myTask.projectId);
+    const myProject = await projectsServices.getProjectById(id);
     const users = myProject.users;
 
     const userInProject = users.some((user) => user.userId == currentUserId);

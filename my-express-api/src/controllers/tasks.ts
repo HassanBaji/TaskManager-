@@ -3,7 +3,7 @@ import {
   deleteByTaskId,
   getMyTaskById,
   getTasks,
-} from "../db/tasks";
+} from "../tld/db/tasks";
 import express from "express";
 
 export const getAllTasks = async (
