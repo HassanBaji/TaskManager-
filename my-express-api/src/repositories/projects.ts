@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { ProjectModel } from "../tld/db/projects";
 import { ProjectsClass } from "../tld/entities/ProjectsClass";
 import { ProjectsMapper, toDomainProps } from "../mappers/ProjectsMapper";
+import tasks from "router/tasks";
 
 export class ProjectsRepo {
   projectMapper: ProjectsMapper;
@@ -26,22 +27,41 @@ export class ProjectsRepo {
     return myProjectsArray;
   };
 
-  public getMyProjectById = (id: string): Promise<ProjectsClass | null> => {
-    return ProjectModel.findById(id);
+  public getMyProjectById = async (
+    id: string
+  ): Promise<ProjectsClass | null> => {
+    const myProject = await ProjectModel.findById(id);
+    const projectProps: toDomainProps = {
+      name: myProject.name,
+      desc: myProject.desc,
+      _id: myProject.id,
+      tasks: myProject.tasks,
+      users: myProject.users,
+    };
+    const myProjectClass: ProjectsClass =
+      this.projectMapper.toDomain(projectProps);
+    return myProjectClass;
   };
   public createProject = async (
     values: ProjectsClass
-  ): Promise<ProjectsClass> => new ProjectModel(values).save();
+  ): Promise<ProjectsClass> => {
+    const myProjectToPersistent = this.projectMapper.toPersistent(values);
+
+    return await new ProjectModel(myProjectToPersistent).save();
+  };
 
   public deleteProjectById = async (
     id: string
   ): Promise<ProjectsClass | null> => {
-    return ProjectModel.findByIdAndDelete(id);
+    return await ProjectModel.findByIdAndDelete(id);
   };
 
   public updateProjectById = async (
     id: string,
     values: ProjectsClass
-  ): Promise<ProjectsClass | null> =>
-    ProjectModel.findByIdAndUpdate(id, values);
+  ): Promise<ProjectsClass | null> => {
+    const myProjectToPersistent = this.projectMapper.toPersistent(values);
+
+    return await ProjectModel.findByIdAndUpdate(id, myProjectToPersistent);
+  };
 }

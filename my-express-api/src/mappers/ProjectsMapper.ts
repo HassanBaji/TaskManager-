@@ -10,7 +10,18 @@ export interface toDomainProps {
 
 export class ProjectsMapper {
   public toDomain = (raw: toDomainProps): ProjectsClass => {
-    return new ProjectsClass(raw.name, raw.desc, raw._id, raw.users, raw.tasks);
+    return new ProjectsClass(
+      raw.name,
+      raw.desc,
+      raw._id,
+      raw.users.map((user: { userId: string; userName: string }) => ({
+        userId: user.userId,
+        userName: user.userName,
+      })),
+      raw.tasks.map((task: { taskId: string }) => ({
+        taskId: task.taskId,
+      }))
+    );
   };
 
   public toPersistent = (project: ProjectsClass) => {
