@@ -1,6 +1,8 @@
-import { deleteUser } from "../../controllers/users";
+import { deleteUser } from "../../../controllers/users";
+import z from "zod";
+
 export class ProjectsClass {
-  readonly id: string;
+  readonly id: String;
   readonly name: string;
   readonly desc: string;
   readonly owner: string;
@@ -10,6 +12,7 @@ export class ProjectsClass {
   constructor(
     name: string,
     desc: string,
+    owner: string,
     _id?: string,
     users?: { userName: string; userId: string }[],
     tasks?: { taskId: string }[]
@@ -17,6 +20,7 @@ export class ProjectsClass {
     this.id = _id ?? "0";
     this.name = name;
     this.desc = desc;
+    this.owner = owner;
     this.tasks = tasks ?? [];
     this.users = users ?? [];
   }

@@ -1,8 +1,8 @@
 import express from "express";
 import { get, merge } from "lodash";
-import { getUserBySessionToken } from "../tld/db/users";
+import { getUserBySessionToken } from "../db/users";
 import { ProjectsServices } from "../services/projects";
-import { getMyTaskById } from "../tld/db/tasks";
+import { getMyTaskById } from "../db/tasks";
 
 const projectsServices: ProjectsServices = new ProjectsServices();
 

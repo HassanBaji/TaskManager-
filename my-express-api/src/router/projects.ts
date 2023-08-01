@@ -3,15 +3,18 @@ import // createNewProject,
 // getAllMyProjects,
 // deleteProject,
 // getMyProject,
-// updateProject,
+// updateProject,ß
 // updateTasks,
 // updateUsers,
 "../controllers/projects";
-import { getAllProjectEndPoint } from "../Projects/getProjects/endPoint";
+import { getAllProjectEndPoint } from "../Projects/useCases/getProjects/endPoint";
+import { getProjectByIdEndPoint } from "../Projects/useCases/getProjectsById/endPoint";
 import express from "express";
+import { createNewProjectEndPoint } from "../Projects/useCases/createProjects/endPoint";
+import { addUserToProjectEndPoint } from "../Projects/useCases/addUserToProject/endpoint";
 
 export default (router: express.Router) => {
-  // router.post("/projects", isAuthenticated, createNewProject);
+  router.post("/projects", isAuthenticated, createNewProjectEndPoint);
   // // router.patch(
   // //   "/projects-users/:id",
   // //   isAuthenticated,
@@ -19,7 +22,12 @@ export default (router: express.Router) => {
   // //   updateUsers
   // // );
   // // router.patch("/projects-tasks/:id", isAuthenticated, updateTasks);
-  // router.put("/projects/:id", isAuthenticated, isOwnerProject, updateProject);
+  router.put(
+    "/projects/:id/users/add",
+    isAuthenticated,
+    isOwnerProject,
+    addUserToProjectEndPoint
+  );
 
   // router.delete(
   //   "/projects/:id",
@@ -28,6 +36,6 @@ export default (router: express.Router) => {
   //   deleteProject
   // );
   // router.get("/projects/myprojects", isAuthenticated, getAllMyProjects);
-  // router.get("/projects/:id", isAuthenticated, getMyProject);
+  router.get("/projects/:id", isAuthenticated, getProjectByIdEndPoint);
   router.get("/projects", isAuthenticated, getAllProjectEndPoint);
 };

@@ -1,5 +1,6 @@
-import { ProjectsClass } from "tld/entities/ProjectsClass";
+import { ProjectsClass } from "Projects/tld/entities/ProjectsClass";
 import mongoose from "mongoose";
+import z from "zod";
 
 const ProjectsSchema = new mongoose.Schema({
   owner: { type: String, required: true },

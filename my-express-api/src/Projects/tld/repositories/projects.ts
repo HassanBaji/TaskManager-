@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
-import { ProjectModel } from "../tld/db/projects";
-import { ProjectsClass } from "../tld/entities/ProjectsClass";
+import { ProjectModel } from "../db/projects";
+import { ProjectsClass } from "../entities/ProjectsClass";
 import { ProjectsMapper, toDomainProps } from "../mappers/ProjectsMapper";
 import tasks from "router/tasks";
 
@@ -18,6 +18,7 @@ export class ProjectsRepo {
       const projectProps: toDomainProps = {
         name: project.name,
         desc: project.desc,
+        owner: project.owner,
         _id: project._id,
         tasks: project.tasks,
         users: project.users,
@@ -34,20 +35,33 @@ export class ProjectsRepo {
     const projectProps: toDomainProps = {
       name: myProject.name,
       desc: myProject.desc,
-      _id: myProject.id,
+      owner: myProject.owner,
+      _id: myProject._id.toString(),
       tasks: myProject.tasks,
       users: myProject.users,
     };
     const myProjectClass: ProjectsClass =
       this.projectMapper.toDomain(projectProps);
+
     return myProjectClass;
   };
+
   public createProject = async (
     values: ProjectsClass
   ): Promise<ProjectsClass> => {
     const myProjectToPersistent = this.projectMapper.toPersistent(values);
 
-    return await new ProjectModel(myProjectToPersistent).save();
+    const newProject = await new ProjectModel(myProjectToPersistent).save();
+    const props: toDomainProps = {
+      name: newProject.name,
+      desc: newProject.desc,
+      owner: newProject.desc,
+      _id: newProject._id.toString(),
+      tasks: newProject.tasks,
+      users: newProject.users,
+    };
+    const newProjectSaved = this.projectMapper.toDomain(props);
+    return newProjectSaved;
   };
 
   public deleteProjectById = async (
@@ -62,6 +76,20 @@ export class ProjectsRepo {
   ): Promise<ProjectsClass | null> => {
     const myProjectToPersistent = this.projectMapper.toPersistent(values);
 
-    return await ProjectModel.findByIdAndUpdate(id, myProjectToPersistent);
+    const newProject = await ProjectModel.findByIdAndUpdate(
+      id,
+      myProjectToPersistent
+    );
+
+    const props: toDomainProps = {
+      name: newProject.name,
+      desc: newProject.desc,
+      owner: newProject.desc,
+      _id: newProject._id.toString(),
+      tasks: newProject.tasks,
+      users: newProject.users,
+    };
+    const newProjectSaved = this.projectMapper.toDomain(props);
+    return newProjectSaved;
   };
 }

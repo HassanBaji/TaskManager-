@@ -1,8 +1,8 @@
 import express from "express";
 //import { IProject } from "../tld/db/projects";
-import { ProjectsRepo } from "../repositories/projects";
-import { getUserById } from "../tld/db/users";
-import { ProjectsClass } from "../tld/entities/ProjectsClass";
+import { ProjectsRepo } from "../Projects/tld/repositories/projects";
+import { getUserById } from "../db/users";
+import { ProjectsClass } from "../Projects/tld/entities/ProjectsClass";
 
 export class ProjectsServices {
   private projectsRepo: ProjectsRepo;
